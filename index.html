@@ -81,9 +81,9 @@
 			<source src="music.mp3"></source>
 		</audio>
 		<div style="text-align: center; width: 100%; display:none;" id="start_container">
-			<a href="javascript:ipad_start();" style="font-family: Helvetica; font-size: 44px;">Start</a>
+			<a href="javascript:start();" style="font-family: Helvetica; font-size: 44px;">Start</a>
 		</div>
-		<script type="text/javascript">	
+		<script type="text/javascript">
 			spinner = document.getElementById('spinner');
 			angle = 0;
 			function spin() {
@@ -92,14 +92,20 @@
 				spinner.setAttribute("transform","rotate(" + angle + ", 81, 69)");
 				setTimeout("spin()", 100);
 			}
-			function ipad_start() {
+			function start() {
 				document.getElementById('looper').play();
 				document.getElementById('start_container').style.display = 'none';
-				spin();		
+				spin();
+				document.querySelector('audio').play();
 			}
-			if (navigator.userAgent.indexOf('iPad') != -1) {
-				document.getElementById('start_container').style.display = 'block';
-			} else { spin(); }
+			var promise = document.querySelector('audio').play();
+			if (promise !== undefined) {
+				promise.then(_ => {
+					spin();		
+				}).catch(error => {
+					document.getElementById('start_container').style.display = 'block';
+				});
+			}
 		</script>
 	</body>
 </html>
